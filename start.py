@@ -192,7 +192,10 @@ def cleanup_x11():
 def start_tws():
     subprocess.check_call([
         'tightvncserver',
-        '-name', os.environ.get('VNC_NAME', 'tws-docker'),
+        '-name', os.environ.get(
+            'VNC_NAME',
+            'tws-' + os.environ.get('IBC_USERNAME', 'default'),
+        ),
         '-depth', os.environ.get('VNC_DEPTH', '24'),
         '-geometry', os.environ.get('VNC_GEOMETRY', '1920x1080'),
         ':0'

@@ -7,7 +7,8 @@ running under <a href="https://www.tightvnc.com/">TightVNC</a>.
 * User configuration is cleanly separated, allowing one computer to serve many
   accounts, store configuration in <a
   href="https://kubernetes.io/">Kubernetes</a> secrets, and for
-  one-size-fits-all images to exist on <a href="https://hub.docker.com/">Docker
+  one-size-fits-all images to exist on <a
+  href="https://hub.docker.com/repository/docker/dockertws/dockertws">Docker
   Hub</a>.
 
 * In line with Kubernetes best practice, IBC and TWS logs are redirected to
@@ -15,17 +16,19 @@ running under <a href="https://www.tightvnc.com/">TightVNC</a>.
 
 * Docker Hub images are completely transparent, except for upload credentials. CI
   configuration is checked in, and the build log for each cryptographic image
-  digest can be audited via <a href="https://travis-ci.org/">Travis CI</a>.
+  digest can be audited via <a
+  href="https://github.com/docker-tws/docker-tws/actions">GitHub Actions</a>.
 
 
 ## Usage
 
 ```
 docker run \
+    --rm -it \
     -e VNC_PASSWORD=123 \
-    -P localhost:5900:5900 \
-    -P localhost:7496:7496 \
-    docker-tws/tws:latest
+    -p 127.0.0.1:5900:5900 \
+    -p 127.0.0.1:7496:7496 \
+    dockertws/dockertws:ci
 ```
 
 Optionally supply credentials using:
@@ -232,7 +235,7 @@ See <a href="https://github.com/IbcAlpha/IBC/blob/master/userguide.md#configurin
 
 <tr>
 <td>VNC_NAME
-<td>tws-docker
+<td>tws-<em>username</em>
 <td>VNC desktop name
 
 <tr>
