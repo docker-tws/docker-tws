@@ -116,7 +116,7 @@ def write_ibc_config():
                     'IBC_EXISTING_SESSION_DETECTED',
                     'manual',
                 ),
-                'AcceptIncomingConectionAction=%s' % env(
+                'AcceptIncomingConnectionAction=%s' % env(
                     'IBC_ACCEPT_INCOMING_CONNECTION',
                     'accept',
                 ),
