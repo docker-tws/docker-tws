@@ -143,6 +143,11 @@ See <a href="https://github.com/IbcAlpha/IBC/blob/master/userguide.md#configurin
 <td>
 
 <tr>
+<td>IBC_SEND_TWS_LOGS_TO_CONSOLE
+<td>yes
+<td>If `true`, TWS diagnostic logs will also be sent to the container's stdout
+
+<tr>
 <td>IBC_STORE_SETTINGS_ON_SERVER
 <td>no
 <td>

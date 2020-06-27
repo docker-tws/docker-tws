@@ -96,6 +96,10 @@ def write_ibc_config():
                     'live',
                 ),
                 'IbDir=',
+                'SendTWSLogsToConsole=%s' % env(
+                    'IBC_SEND_TWS_LOGS_TO_CONSOLE',
+                    'yes',
+                ),
                 'StoreSettingsOnServer=%s' % env(
                     'IBC_STORE_SETTINGS_ON_SERVER',
                     'no',
@@ -115,7 +119,7 @@ def write_ibc_config():
                 ),
                 'OverrideTwsApiPort=',
                 'ReadOnlyLogin=%s' % env(
-                    'IBC_READ_ONLY_LOGIN',
+                    'IBC_READONLY_LOGIN',
                     'no',
                 ),
                 'ReadOnlyApi=%s' % env(
