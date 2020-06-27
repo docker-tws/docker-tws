@@ -208,7 +208,7 @@ def start_tws():
             'tws-' + os.environ.get('IBC_USERNAME', 'default'),
         ),
         '-depth', os.environ.get('VNC_DEPTH', '24'),
-        '-geometry', os.environ.get('VNC_GEOMETRY', '1920x1080'),
+        '-geometry', os.environ.get('VNC_GEOMETRY', '1280x720'),
         ':0'
     ])
 
