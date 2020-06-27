@@ -104,7 +104,14 @@ def write_ibc_config():
                     'IBC_STORE_SETTINGS_ON_SERVER',
                     'no',
                 ),
-                'MinimizeMainWindow=no',
+                'MinimizeMainWindow=%s' % env(
+                    'IBC_MINIMIZE_MAIN_WINDOW',
+                    'no',
+                ),
+                'MaximizeMainWindow=%s' % env(
+                    'IBC_MAXIMIZE_MAIN_WINDOW',
+                    'yes'
+                ),
                 'ExistingSessionDetectedAction=%s' % env(
                     'IBC_EXISTING_SESSION_DETECTED',
                     'manual',

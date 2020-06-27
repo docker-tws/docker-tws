@@ -153,6 +153,16 @@ See <a href="https://github.com/IbcAlpha/IBC/blob/master/userguide.md#configurin
 <td>
 
 <tr>
+<td>IBC_MINIMIZE_MAIN_WINDOW
+<td>no
+<td>
+
+<tr>
+<td>IBC_MAXIMIZE_MAIN_WINDOW
+<td>yes
+<td>
+
+<tr>
 <td>IBC_EXISTING_SESSION_DETECTED
 <td>manual
 <td>
