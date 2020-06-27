@@ -33,7 +33,7 @@ RUN \
 #wget -O /tmp/ibc.zip https://github.com/IbcAlpha/IBC/releases/download/3.8.2/IBCLinux-3.8.2.zip && \
 USER root
 RUN \
-    wget -O /tmp/ibc.zip https://github.com/docker-tws/IBC/files/4828321/IBCLinux-3.8.2.zip && \
+    wget -O /tmp/ibc.zip https://github.com/docker-tws/IBC/releases/download/initial/IBCLinux-3.8.2.zip && \
         mkdir -p /opt/ibc && \
         unzip -d /opt/ibc /tmp/ibc.zip && \
         chmod +x /opt/ibc/*.sh /opt/ibc/*/*.sh && \
