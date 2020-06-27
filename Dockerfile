@@ -8,7 +8,7 @@ RUN \
     apt-get -y install \
         ca-certificates \
         firefox \
-        fluxbox \
+        openbox \
         openjdk-8-jre \
         openjfx \
         tightvncserver \

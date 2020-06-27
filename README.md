@@ -289,7 +289,7 @@ Ubuntu 20.04
 <td>The VNC server
 
 <tr>
-<td><code>fluxbox</code>
+<td><code>openbox</code>
 <td>The window manager
 
 <tr>
