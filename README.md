@@ -309,8 +309,8 @@ Ubuntu 20.04
 <td>Terminal emulator
 
 <tr>
-<td><code>firefox</code>
-<td>Allows account management pages to be opened
+<td><code>google-chrome-stable</code>
+<td>Allows account management, audit trail, 3D volatility surface to be opened
 
 <tr>
 <td><code>unzip</code>
@@ -323,5 +323,25 @@ Ubuntu 20.04
 <tr>
 <td><code>openjdk-8-jre</code>
 <td>Possibly optional, or required otherwise data feeds fail to connect
+
+<tr>
+<td>fonts-liberation
+<td>Required for Google Chrome
+
+<tr>
+<td>libappindicator3-1
+<td>Required for Google Chrome
+
+<tr>
+<td>libgbm1
+<td>Required for Google Chrome
+
+<tr>
+<td>libxss1
+<td>Required for Google Chrome
+
+<tr>
+<td>xdg-utils
+<td>Required for Google Chrome
 
 </table>
