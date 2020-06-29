@@ -55,4 +55,4 @@ RUN \
 
 COPY . /opt/docker-tws
 EXPOSE 5900 7496 7497 7462
-CMD /opt/docker-tws/start.py
+CMD ["/opt/docker-tws/start.py"]
