@@ -7,11 +7,16 @@ import os
 import pwd
 import shutil
 import subprocess
+import time
 
 
 def fix_permissions_and_restart():
     subprocess.check_call(['chown', '-R', 'tws:', '/home/tws'])
     os.execlp('runuser', 'runuser', '-p', 'tws', 'bash', '-c', __file__)
+
+
+def set_timezone():
+    os.environ.setdefault('TZ', 'America/New_York')
 
 
 def get_profile_dir():
@@ -200,23 +205,44 @@ def cleanup_x11():
         pass
 
 
-def start_tws():
-    subprocess.check_call([
-        'tightvncserver',
-        '-name', os.environ.get(
-            'VNC_NAME',
-            'tws-' + os.environ.get('IBC_USERNAME', 'default'),
-        ),
+def start_vnc_server():
+    vnc = subprocess.Popen([
+        'Xtightvnc',
+        ':0',
+        '-geometry', os.environ.get('VNC_GEOMETRY', '1920x1080'),
         '-depth', os.environ.get('VNC_DEPTH', '24'),
-        '-geometry', os.environ.get('VNC_GEOMETRY', '1280x720'),
-        ':0'
+        '-rfbwait', '120000',
+        '-rfbauth', os.path.expanduser('~/.vnc/passwd'),
+        '-desktop', os.environ.get(
+            'VNC_NAME',
+            'tws-%s-%s' % (
+                os.environ.get('IBC_TRADING_MODE', 'live'),
+                os.environ.get('IBC_USERNAME', 'default')
+            ),
+        ),
     ])
 
+    while not os.path.exists('/tmp/.X11-unix/X0'):
+        if vnc.poll():
+            print('VNC failed to start')
+            return False
+        time.sleep(0.05)
+
+    return True
+
+
+def start_tws():
     os.environ['DISPLAY'] = ':0'
+
     subprocess.check_call([
-        '/opt/ibc/scripts/ibcstart.sh',
-        get_tws_version()
+        'xsetroot',
+        '-solid', os.environ.get('X11_ROOT_COLOR', '#473C8B')
     ])
+
+    wm = subprocess.Popen(['openbox'])
+    os.execl('/opt/ibc/scripts/ibcstart.sh',
+             '/opt/ibc/scripts/ibcstart.sh',
+             get_tws_version())
 
 
 def main():
@@ -224,10 +250,13 @@ def main():
         fix_permissions_and_restart()
 
     fixup_environment()
+    set_timezone()
     set_vnc_password()
     cleanup_x11()
     copy_initial_data()
     write_ibc_config()
+    if not start_vnc_server():
+        return
     start_tws()
 
 

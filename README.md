@@ -243,6 +243,13 @@ See <a href="https://github.com/IbcAlpha/IBC/blob/master/userguide.md#configurin
 <td>
 
 <tr>
+<td>TZ
+<td>America/New_York
+<td>Container <a
+    href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">timezone</a>,
+    used by TWS to render timestamps
+
+<tr>
 <td>VNC_PASSWORD
 <td><em>(random)</em>
 <td>VNC server password. If unspecified, a random password is
@@ -250,7 +257,7 @@ See <a href="https://github.com/IbcAlpha/IBC/blob/master/userguide.md#configurin
 
 <tr>
 <td>VNC_NAME
-<td>tws-<em>username</em>
+<td>tws-<em>tradingmode</em>-<em>username</em>
 <td>VNC desktop name
 
 <tr>
@@ -262,6 +269,11 @@ See <a href="https://github.com/IbcAlpha/IBC/blob/master/userguide.md#configurin
 <td>VNC_GEOMETRY
 <td>1920x1080
 <td>VNC desktop resolution
+
+<tr>
+<td>X11_ROOT_COLOR
+<td>#36648B
+<td><kbd>xsetroot</kbd> background color
 
 </table>
 
