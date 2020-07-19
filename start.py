@@ -24,14 +24,11 @@ def get_profile_dir():
     with open('/conf/jts.ini') as fp:
         parser.read_file(fp)
 
-    d = {
-        k: int(v)
-        for k, v in parser.items('settings')
-    }
-
-    name = max(d, key=d.get)
-    print('Found profile directory:', name)
-    return name
+    d = dict(parser.items('Logon'))
+    print(d)
+    lst = d['usernametodirectory'].split(',')
+    print('Found profile directory:', lst[0])
+    return lst[0]
 
 
 def get_tws_version():
