@@ -22,6 +22,8 @@ RUN \
         libxslt1.1 \
         xdg-utils \
         \
+        libavcodec58 \
+        libavformat58 \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists /usr/share/{doc,man} && \

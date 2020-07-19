@@ -329,6 +329,14 @@ Ubuntu 20.04
 <td>Required for Google Chrome
 
 <tr>
+<td>libavcodec58
+<td>Required for sound playback
+
+<tr>
+<td>libavformat58
+<td>Required for sound playback
+
+<tr>
 <td>libappindicator3-1
 <td>Required for Google Chrome
 
