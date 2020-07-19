@@ -19,6 +19,7 @@ RUN \
         libappindicator3-1 \
         libgbm1 \
         libxss1 \
+        libxslt1.1 \
         xdg-utils \
         \
         && \

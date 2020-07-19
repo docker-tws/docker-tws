@@ -337,6 +337,10 @@ Ubuntu 20.04
 <td>Required for Google Chrome
 
 <tr>
+<td>libxslt1.1
+<td>Required for JavaFX WebKit (iBot, various other TWS embedded web views)
+
+<tr>
 <td>libxss1
 <td>Required for Google Chrome
 
