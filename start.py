@@ -228,6 +228,20 @@ def start_vnc_server():
     return True
 
 
+def update_jvm_options():
+    path = '/home/tws/Jts/%s/tws.vmoptions' % (get_tws_version(),)
+
+    with open(path, 'r+') as fp:
+        lines = fp.readlines()
+        for i, line in enumerate(lines):
+            if line.startswith('-Xmx'):
+                lines[i] = '-Xmx%s\n' % (os.environ.get('JVM_HEAP_SIZE', '4096m'),)
+
+        fp.seek(0)
+        fp.truncate(0)
+        fp.writelines(lines)
+
+
 def start_tws():
     os.environ['DISPLAY'] = ':0'
 
@@ -252,6 +266,7 @@ def main():
     cleanup_x11()
     copy_initial_data()
     write_ibc_config()
+    update_jvm_options()
     if not start_vnc_server():
         return
     start_tws()

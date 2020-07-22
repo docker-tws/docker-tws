@@ -113,6 +113,11 @@ See <a href="https://github.com/IbcAlpha/IBC/blob/master/userguide.md#configurin
 <th>Description
 
 <tr>
+<td>JVM_HEAP_SIZE
+<td>4096m
+<td>Value of `-Xmx` JVM flag in `tws.vmoptions`
+
+<tr>
 <td>IBC_USERNAME
 <td>
 <td>
