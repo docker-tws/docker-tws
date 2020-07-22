@@ -1,5 +1,7 @@
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
+#libavcodec58 \
+#libavformat58 \
 RUN \
     export DEBIAN_FRONTEND=noninteractive && \
     apt-get -y update && \
@@ -16,14 +18,13 @@ RUN \
         xterm \
         \
         fonts-liberation \
+        python3 \
         libappindicator3-1 \
         libgbm1 \
         libxss1 \
         libxslt1.1 \
         xdg-utils \
         \
-        libavcodec58 \
-        libavformat58 \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists /usr/share/{doc,man} && \
