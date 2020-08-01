@@ -76,6 +76,7 @@ def write_ibc_config():
     with open(os.path.expanduser('~/ibc/config.ini'), 'w') as fp:
         fp.write('%s\n' % (
             '\n'.join((
+                'LogOutputPath=/tmp/logs-fifo',
                 'FIX=%s' % env('IBC_FIX', 'no'),
                 'IbLoginId=%s' % env(
                     'IBC_USERNAME',
@@ -242,6 +243,13 @@ def update_jvm_options():
         fp.writelines(lines)
 
 
+def start_logs_forwarder():
+    if not os.path.exists('/tmp/logs-fifo'):
+        os.mkfifo('/tmp/logs-fifo')
+
+    return subprocess.Popen(['stdbuf', '-oL', 'cat', '/tmp/logs-fifo'])
+
+
 def start_tws():
     os.environ['DISPLAY'] = ':0'
 
@@ -269,8 +277,13 @@ def main():
     update_jvm_options()
     if not start_vnc_server():
         return
-    start_tws()
 
+    forwarder = start_logs_forwarder()
+    try:
+        start_tws()
+    finally:
+        forwarder.terminate()
+        forwarder.wait()
 
 if __name__ == '__main__':
     main()
