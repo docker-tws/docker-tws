@@ -231,12 +231,23 @@ def start_vnc_server():
 
 def update_jvm_options():
     path = '/home/tws/Jts/%s/tws.vmoptions' % (get_tws_version(),)
+    agent_line = -1
 
     with open(path, 'r+') as fp:
         lines = fp.readlines()
         for i, line in enumerate(lines):
             if line.startswith('-Xmx'):
                 lines[i] = '-Xmx%s\n' % (os.environ.get('JVM_HEAP_SIZE', '4096m'),)
+            if line.startswith('-javaagent'):
+                agent_line = i
+
+        if agent_line == -1:
+            lines.append(None)
+
+        lines[agent_line] = '-javaagent:%s=%s\n' % (
+            '/opt/ibc/IBC.jar',
+            os.path.expanduser('~/ibc/config.ini'),
+        )
 
         fp.seek(0)
         fp.truncate(0)
@@ -259,9 +270,8 @@ def start_tws():
     ])
 
     wm = subprocess.Popen(['openbox'])
-    os.execl('/opt/ibc/scripts/ibcstart.sh',
-             '/opt/ibc/scripts/ibcstart.sh',
-             get_tws_version())
+    tws_path = '/home/tws/Jts/%s/tws' % (get_tws_version(),)
+    subprocess.call([tws_path])
 
 
 def main():
