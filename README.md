@@ -330,8 +330,28 @@ Ubuntu 20.04
 <td>Possibly optional, or required otherwise data feeds fail to connect
 
 <tr>
+<td>libnss3
+<td>Required for Google Chrome
+
+<tr>
+<td>libnspr4
+<td>Required for Google Chrome
+
+<tr>
 <td>fonts-liberation
 <td>Required for Google Chrome
+
+<tr>
+<td>fonts-dejavu-core
+<td>Required for TWS
+
+<tr>
+<td>fonts-dejavu-extra
+<td>Required for TWS
+
+<tr>
+<td>libasound2
+<td>Required for sound playback
 
 <tr>
 <td>libavcodec58

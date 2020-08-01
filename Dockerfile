@@ -10,20 +10,25 @@ RUN \
     apt-get -y install \
         ca-certificates \
         openbox \
-        openjdk-8-jre \
-        openjfx \
         tightvncserver \
         unzip \
         wget \
         xterm \
         \
-        fonts-liberation \
         python3 \
         libappindicator3-1 \
         libgbm1 \
         libxss1 \
         libxslt1.1 \
         xdg-utils \
+        libasound2 \
+        fonts-liberation \
+        fonts-dejavu-core \
+        fonts-dejavu-extra \
+        libavcodec57 \
+        libavformat57 \
+        libnspr4 \
+        libnss3 \
         \
         && \
     apt-get clean && \
