@@ -6,7 +6,9 @@ import glob
 import os
 import pwd
 import shutil
+import signal
 import subprocess
+import sys
 import time
 
 
@@ -254,11 +256,20 @@ def update_jvm_options():
         fp.writelines(lines)
 
 
+_logs_fifo = None
+
+
 def start_logs_forwarder():
+    global _logs_fifo
+
     if not os.path.exists('/tmp/logs-fifo'):
         os.mkfifo('/tmp/logs-fifo')
 
-    return subprocess.Popen(['stdbuf', '-oL', 'cat', '/tmp/logs-fifo'])
+    proc = subprocess.Popen(['stdbuf', '-oL', 'cat', '/tmp/logs-fifo'])
+    # Hold the FIFO open to prevent 'cat' from exiting during TWS auto-restart.
+    # Must occur *after* cat has started to avoid deadlock.
+    _logs_fifo = open('/tmp/logs-fifo', 'wb', 0)
+    return proc
 
 
 def start_tws():
@@ -271,12 +282,67 @@ def start_tws():
 
     wm = subprocess.Popen(['openbox'])
     tws_path = '/home/tws/Jts/%s/tws' % (get_tws_version(),)
-    subprocess.call([tws_path])
+    return subprocess.Popen(
+        args=[tws_path],
+        env=dict(os.environ, **{'I_AM_TWS': '1'})
+    )
+
+
+def is_process_alive(pid):
+    try:
+        os.kill(pid, 0)
+        return True
+    except OSError:
+        return False
+
+
+def wait_for_completion(pid):
+    while is_process_alive(pid):
+        time.sleep(1.5)
+
+
+def find_tws_process():
+    for pid in os.listdir('/proc'):
+        if not pid.isdigit():
+            continue
+
+        try:
+            path = os.readlink('/proc/%s/exe' % (pid,))
+        except OSError:
+            continue
+
+        if os.path.basename(path) != 'java':
+            continue
+
+        with open('/proc/%s/environ' % (pid,)) as fp:
+            env = fp.read()
+
+        if 'I_AM_TWS=1' in env:
+            sys.stderr.write('docker_tws: found new TWS PID %s\n' % (pid,))
+            return int(pid)
+
+    sys.stderr.write('docker_tws: could not find new TWS PID\n')
+    return None
+
+
+def block_until_exit(proc):
+    """
+    TWS auto-restart may exit the original process, but another will spring up
+    in its wake. We identify it by scanning for a /proc/*/exe whose
+    basename(readlink()) is "java" and whose environ contains "I_AM_TWS"
+    """
+    pid = proc.pid
+    while pid is not None:
+        wait_for_completion(pid)
+        pid = find_tws_process()
 
 
 def main():
     if os.geteuid() == 0:
         fix_permissions_and_restart()
+
+    # Allow child processes to self-reap (during auto-restart)
+    signal.signal(signal.SIGCHLD, signal.SIG_IGN)
 
     fixup_environment()
     set_timezone()
@@ -290,7 +356,7 @@ def main():
 
     forwarder = start_logs_forwarder()
     try:
-        start_tws()
+        block_until_exit(start_tws())
     finally:
         forwarder.terminate()
         forwarder.wait()

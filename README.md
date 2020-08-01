@@ -19,12 +19,15 @@ running under <a href="https://www.tightvnc.com/">TightVNC</a>.
   digest can be audited via <a
   href="https://github.com/docker-tws/docker-tws/actions">GitHub Actions</a>.
 
+* TWS auto-restart is supported. If TWS exits, the container will search for a
+  replacement Java process and continue running when one is found.
+
 
 ## Usage
 
 ```
 docker run \
-    --rm -it \
+    --rm --init -it \
     -e VNC_PASSWORD=123 \
     -p 127.0.0.1:5900:5900 \
     -p 127.0.0.1:7496:7496 \
@@ -45,6 +48,11 @@ using:
     -v /path/to/jts.ini:/conf/jts.ini:ro
     -v /path/to/tws.xml:/conf/tws.xml:ro
 ```
+
+Note: ensure `--init` is present, otherwise stray TWS zombie processes may
+accumulate over auto-restarts, preventing the startup script from detecting TWS
+has legitimately exited.
+
 
 ## Exposed Ports
 
