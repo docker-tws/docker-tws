@@ -205,6 +205,7 @@ def start_vnc_server():
         '-geometry', os.environ.get('VNC_GEOMETRY', '1920x1080'),
         '-depth', os.environ.get('VNC_DEPTH', '24'),
         '-rfbwait', '120000',
+        '-nevershared',
         '-rfbauth', os.path.expanduser('~/.vnc/passwd'),
         '-desktop', os.environ.get(
             'VNC_NAME',
