@@ -33,13 +33,6 @@ def get_profile_dir():
     return lst[0]
 
 
-def get_tws_version():
-    paths = glob.glob(os.path.expanduser('~/Jts/???'))
-    version = os.path.basename(paths[0])
-    print('Found TWS version:', version)
-    return version
-
-
 def set_vnc_password():
     default_password = binascii.hexlify(os.getrandom(16)).decode()
     os.environ.setdefault('VNC_PASSWORD', default_password)
@@ -232,7 +225,7 @@ def start_vnc_server():
 
 
 def update_jvm_options():
-    path = '/home/tws/Jts/%s/tws.vmoptions' % (get_tws_version(),)
+    path = '/home/tws/Jts/current/tws.vmoptions'
     agent_line = -1
 
     with open(path, 'r+') as fp:
@@ -281,7 +274,7 @@ def start_tws():
     ])
 
     wm = subprocess.Popen(['openbox'])
-    tws_path = '/home/tws/Jts/%s/tws' % (get_tws_version(),)
+    tws_path = '/home/tws/Jts/current/tws'
     return subprocess.Popen(
         args=[tws_path],
         env=dict(os.environ, **{'I_AM_TWS': '1'})

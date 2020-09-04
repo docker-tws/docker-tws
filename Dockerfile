@@ -43,12 +43,12 @@ RUN \
 
 USER tws
 RUN \
-    wget -O /tmp/tws.sh https://download2.interactivebrokers.com/installers/tws/stable-standalone/tws-stable-standalone-linux-x64.sh && \
+    wget -O /tmp/tws.sh https://download2.interactivebrokers.com/installers/tws/latest-standalone/tws-latest-standalone-linux-x64.sh && \
         mkdir -p /home/tws/.vnc && \
         echo x | vncpasswd -f > /home/tws/.vnc/passwd && \
         chmod -R go= /home/tws/.vnc && \
         USER=tws tightvncserver :0 && \
-        DISPLAY=:0 bash /tmp/tws.sh -q && \
+        DISPLAY=:0 bash /tmp/tws.sh -q -dir /home/tws/Jts/current && \
         rm -rf /home/tws/.vnc && \
     rm /tmp/tws.sh
 
