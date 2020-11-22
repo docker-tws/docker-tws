@@ -3,6 +3,7 @@
 import binascii
 import configparser
 import glob
+import gzip
 import os
 import pwd
 import shutil
@@ -21,7 +22,7 @@ def set_timezone():
     os.environ.setdefault('TZ', 'America/New_York')
 
 
-def get_profile_dir():
+def get_profile_dirs():
     parser = configparser.ConfigParser()
     with open('/conf/jts.ini') as fp:
         parser.read_file(fp)
@@ -29,8 +30,8 @@ def get_profile_dir():
     d = dict(parser.items('Logon'))
     print(d)
     lst = d['usernametodirectory'].split(',')
-    print('Found profile directory:', lst[0])
-    return lst[0]
+    print('Found profile directories:', lst)
+    return lst
 
 
 def set_vnc_password():
@@ -58,10 +59,21 @@ def copy_initial_data():
                     os.path.expanduser('~/Jts/jts.ini'))
 
     if os.path.exists('/conf/tws.xml'):
-        profile_dir = os.path.join('~/Jts', get_profile_dir())
+        with open('/conf/tws.xml', 'rb') as fp:
+            xml = fp.read()
+    elif os.path.exists('/conf/tws.xml.gz'):
+        with gzip.open('/conf/tws.xml.gz', 'rb') as fp:
+            xml = fp.read()
+    else:
+        return
+
+    for name in get_profile_dirs():
+        profile_dir = os.path.join('~/Jts', name)
         os.makedirs(os.path.expanduser(profile_dir), exist_ok=True)
-        shutil.copy('/conf/tws.xml',
-                    os.path.expanduser(os.path.join(profile_dir, 'tws.xml')))
+
+        path = os.path.expanduser(os.path.join(profile_dir, 'tws.xml'))
+        with open(path, 'wb') as fp:
+            fp.write(xml)
 
 
 def write_ibc_config():
