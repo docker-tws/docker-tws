@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: paper
+  namespace: tws
+
+data:
+  IBC_TRADING_MODE: "paper"
+  IBC_STORE_SETTINGS_ON_SERVER: "no"
+  IBC_READONLY_LOGIN: "yes"
+  TZ: "Europe/London"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paper
+  namespace: tws
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tws
+      trading-mode: paper
+  template:
+    metadata:
+      labels:
+        app: tws
+        trading-mode: paper
+    spec:
+      volumes:
+        - name: conf
+          secret:
+            secretName: ibkr-conf
+      containers:
+        - name: tws
+          image: registry.mycorp.mydomain/tws
+          volumeMounts:
+          - mountPath: /conf
+            name: conf
+
+          envFrom:
+          - secretRef:
+              name: ibkr-creds
+          - configMapRef:
+              name: paper
+          ports:
+          - name: vnc
+            containerPort: 5900
+          - name: ibc
+            containerPort: 7462
+          - name: paper
+            containerPort: 7497
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: paper
+  namespace: tws
+  labels:
+    app: tws
+    trading-mode: paper
+spec:
+  selector:
+    app: tws
+    trading-mode: paper
+  ports:
+  - name: vnc
+    port: 5900
+    targetPort: 5900
+  - name: ibc
+    port: 7462
+    targetPort: 7462
+  - name: paper
+    port: 7497
+    targetPort: 7497

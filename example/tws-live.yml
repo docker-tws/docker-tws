@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: live
+  namespace: tws
+
+data:
+  IBC_TRADING_MODE: "live"
+  IBC_STORE_SETTINGS_ON_SERVER: "yes"
+  IBC_READONLY_LOGIN: "yes"
+  TZ: "Europe/London"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: live
+  namespace: tws
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tws
+      trading-mode: live
+  template:
+    metadata:
+      labels:
+        app: tws
+        trading-mode: live
+    spec:
+      volumes:
+        - name: conf
+          secret:
+            secretName: ibkr-conf
+      containers:
+        - name: tws
+          image: registry.mycorp.mydomain/tws
+          volumeMounts:
+          - mountPath: /conf
+            name: conf
+
+          envFrom:
+          - secretRef:
+              name: ibkr-creds
+          - configMapRef:
+              name: live
+          ports:
+          - name: vnc
+            containerPort: 5900
+          - name: ibc
+            containerPort: 7462
+          - name: live
+            containerPort: 7496
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: live
+  namespace: tws
+  labels:
+    app: tws
+    trading-mode: live
+spec:
+  selector:
+    app: tws
+    trading-mode: live
+  ports:
+  - name: vnc
+    port: 5900
+    targetPort: 5900
+  - name: ibc
+    port: 7462
+    targetPort: 7462
+  - name: live
+    port: 7496
+    targetPort: 7496
