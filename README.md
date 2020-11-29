@@ -22,12 +22,15 @@ running under <a href="https://www.tightvnc.com/">TightVNC</a>.
 * TWS auto-restart is supported. If TWS exits, the container will search for a
   replacement Java process and continue running when one is found.
 
+* [krallin/tini](https://github.com/krallin/tini) is used to avoid stray TWS
+  zombie processes accumulating over auto-restarts.
+
 
 ## Usage
 
 ```
 docker run \
-    --rm --init -it \
+    --rm -it \
     -e VNC_PASSWORD=123 \
     -p 127.0.0.1:5900:5900 \
     -p 127.0.0.1:7496:7496 \
@@ -48,10 +51,6 @@ using:
     -v /path/to/jts.ini:/conf/jts.ini:ro
     -v /path/to/tws.xml:/conf/tws.xml:ro
 ```
-
-Note: ensure `--init` is present, otherwise stray TWS zombie processes may
-accumulate over auto-restarts, preventing the startup script from detecting TWS
-has legitimately exited.
 
 
 ## Exposed Ports

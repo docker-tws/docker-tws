@@ -55,6 +55,10 @@ RUN \
 #wget -O /tmp/ibc.zip https://github.com/IbcAlpha/IBC/releases/download/3.8.2/IBCLinux-3.8.2.zip && \
 USER root
 
+ADD https://github.com/krallin/tini/releases/download/v0.19.0/tini /tini
+RUN chmod +x /tini
+ENTRYPOINT ["/tini", "--"]
+
 RUN \
     wget -O /tmp/ibc.zip https://github.com/docker-tws/IBC/releases/download/initial/IBCLinux-3.8.2.zip && \
         mkdir -p /opt/ibc && \
