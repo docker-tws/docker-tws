@@ -2,6 +2,7 @@
 
 import binascii
 import configparser
+import fcntl
 import glob
 import gzip
 import os
@@ -343,9 +344,29 @@ def block_until_exit(proc):
         pid = find_tws_process()
 
 
+def copy_template_if_empty():
+    print("Copying home directory..")
+    fd = os.open('/home/tws', os.O_RDONLY)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        try:
+            if len(glob.glob('/home/tws/*')) == 0:
+                subprocess.check_call(
+                    'tar -C /home/tws.pristine -c . | '
+                    'tar -C /home/tws -x',
+                    shell=True,
+                )
+        finally:
+            fcntl.flock(fd, fcntl.LOCK_UN)
+    finally:
+        os.close(fd)
+
+
 def main():
     if os.geteuid() == 0:
         fix_permissions_and_restart()
+
+    copy_template_if_empty()
 
     # Allow child processes to self-reap (during auto-restart)
     signal.signal(signal.SIGCHLD, signal.SIG_IGN)

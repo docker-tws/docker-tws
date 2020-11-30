@@ -25,6 +25,10 @@ running under <a href="https://www.tightvnc.com/">TightVNC</a>.
 * [krallin/tini](https://github.com/krallin/tini) is used to avoid stray TWS
   zombie processes accumulating over auto-restarts.
 
+* Running multiple TWS containers within a single Kubernetes pod is supported,
+  to allow sharing realtime market data permissions between live and paper
+  trading accounts.
+
 
 ## Usage
 
@@ -104,6 +108,21 @@ All paths are optional.
 <td>File to install as <code>~tws/Jts/[profile]/tws.xml</code>. If provided,
     <code>jts.ini</code> must also be provided, as it is needed to detect the
     profile name
+
+<tr>
+<td><code>/home/tws</code>
+<td>Home directory that can be mapped to a shared volume such as a Kubernetes
+    <code>emptyDir</code>. On initial startup, the directory is locked and a
+    pristine TWS is copied into it, if it was previously empty. This permits a
+    live TWS account and paper TWS account running as separate containers
+    within the same Kubernetes pod to share their home directory, which is
+    necessary for realtime market data licenses to be shared between both
+    instances.
+
+    <p>
+    It is recommended this volume is stored persistently, as the TWS program
+    code is copied into it, significantly complicating the process of upgrading
+    the running version of TWS.
 
 </table>
 

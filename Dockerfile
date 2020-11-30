@@ -55,6 +55,11 @@ RUN \
 #wget -O /tmp/ibc.zip https://github.com/IbcAlpha/IBC/releases/download/3.8.2/IBCLinux-3.8.2.zip && \
 USER root
 
+RUN  \
+    mv /home/tws /home/tws.pristine && \
+    mkdir -v /home/tws && \
+    chown -v tws: /home/tws
+
 ADD https://github.com/krallin/tini/releases/download/v0.19.0/tini /tini
 RUN chmod +x /tini
 ENTRYPOINT ["/tini", "--"]
