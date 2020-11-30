@@ -114,15 +114,13 @@ All paths are optional.
 <td>Home directory that can be mapped to a shared volume such as a Kubernetes
     <code>emptyDir</code>. On initial startup, the directory is locked and a
     pristine TWS is copied into it, if it was previously empty. This permits a
-    live TWS account and paper TWS account running as separate containers
-    within the same Kubernetes pod to share their home directory, which is
-    necessary for realtime market data licenses to be shared between both
-    instances.
-
+    live account and paper account running as separate containers within one
+    Kubernetes pod to share data, which is necessary for realtime market data
+    license sharing to work.
+    <p>&nbsp;
     <p>
-    It is recommended this volume is stored persistently, as the TWS program
-    code is copied into it, significantly complicating the process of upgrading
-    the running version of TWS.
+    Avoid storing this volume persistently, as the TWS program code is copied
+    into it, complicating the task of upgrading TWS version in use.
 
 </table>
 
