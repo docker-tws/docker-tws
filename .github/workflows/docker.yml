@@ -10,7 +10,8 @@ env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   GITHUB_SHA: ${{ github.sha }}
-  IMAGE_NAME: dockertws/dockertws:ci
+  GITHUB_REF: ${{ github.ref }}
+  IMAGE_NAME: dockertws/dockertws
 
 jobs:
   setup-build-publish-deploy:
@@ -23,11 +24,14 @@ jobs:
 
     - name: Build
       run: |
-        docker build -t "$IMAGE_NAME" \
+        docker build \
+          -t "$IMAGE_NAME:${GITHUB_REF##*/}" \
+          -t "$IMAGE_NAME:${GITHUB_REF##*/}-${GITHUB_SHA:0:7}" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" .
 
     - name: Publish
       run: |
         docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-        docker push "$IMAGE_NAME"
+        docker push "$IMAGE_NAME:${GITHUB_REF##*/}"
+        docker push "$IMAGE_NAME:${GITHUB_REF##*/}-${GITHUB_SHA:0:7}"
