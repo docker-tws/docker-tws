@@ -25,9 +25,9 @@ running under <a href="https://www.tightvnc.com/">TightVNC</a>.
 * [krallin/tini](https://github.com/krallin/tini) is used to avoid stray TWS
   zombie processes accumulating over auto-restarts.
 
-* Running multiple TWS containers within a single Kubernetes pod is supported,
-  to allow sharing realtime market data permissions between live and paper
-  trading accounts.
+* Running multiple TWS containers within one Kubernetes pod is partially
+  supported, to allow sharing realtime market data permissions between live and
+  paper trading accounts.
 
 
 ## Usage
@@ -67,7 +67,7 @@ using:
 
 <tr>
 <td><code>5900</code>
-<td>VNC display
+<td>VNC display (modify using <code>VNC_DISPLAY</code> option)
 
 <tr>
 <td><code>7462</code>
@@ -279,6 +279,12 @@ See <a href="https://github.com/IbcAlpha/IBC/blob/master/userguide.md#configurin
 <td>Container <a
     href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">timezone</a>,
     used by TWS to render timestamps
+
+<tr>
+<td>VNC_DISPLAY
+<td><em>0</em>
+<td>VNC X11 display. This is exposed to allow running multiple TWS instances
+    within one Kubernetes pod, where the network interface is shared.
 
 <tr>
 <td>VNC_PASSWORD

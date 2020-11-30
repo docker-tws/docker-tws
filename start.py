@@ -14,6 +14,9 @@ import sys
 import time
 
 
+VNC_DISPLAY = os.environ.get('VNC_DISPLAY', '0')
+
+
 def fix_permissions_and_restart():
     subprocess.check_call(['chown', '-R', 'tws:', '/home/tws'])
     os.execlp('runuser', 'runuser', '-p', 'tws', 'bash', '-c', __file__)
@@ -201,12 +204,12 @@ def fixup_environment():
 
 def cleanup_x11():
     try:
-        os.unlink('/tmp/.X11-unix/X0')
+        os.unlink('/tmp/.X11-unix/X' + VNC_DISPLAY)
     except OSError:
         pass
 
     try:
-        os.unlink('/tmp/.X0-lock')
+        os.unlink('/tmp/.X%s-lock' % (VNC_DISPLAY,))
     except OSError:
         pass
 
@@ -214,7 +217,7 @@ def cleanup_x11():
 def start_vnc_server():
     vnc = subprocess.Popen([
         'Xtightvnc',
-        ':0',
+        ':' + VNC_DISPLAY,
         '-geometry', os.environ.get('VNC_GEOMETRY', '1920x1080'),
         '-depth', os.environ.get('VNC_DEPTH', '24'),
         '-rfbwait', '120000',
@@ -229,7 +232,7 @@ def start_vnc_server():
         ),
     ])
 
-    while not os.path.exists('/tmp/.X11-unix/X0'):
+    while not os.path.exists('/tmp/.X11-unix/X' + VNC_DISPLAY):
         if vnc.poll():
             print('VNC failed to start')
             return False
@@ -280,7 +283,7 @@ def start_logs_forwarder():
 
 
 def start_tws():
-    os.environ['DISPLAY'] = ':0'
+    os.environ['DISPLAY'] = ':' + VNC_DISPLAY
 
     subprocess.check_call([
         'xsetroot',
