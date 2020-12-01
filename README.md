@@ -25,9 +25,9 @@ running under <a href="https://www.tightvnc.com/">TightVNC</a>.
 * [krallin/tini](https://github.com/krallin/tini) is used to avoid stray TWS
   zombie processes accumulating over auto-restarts.
 
-* Running multiple TWS containers within one Kubernetes pod is partially
-  supported, to allow sharing realtime market data permissions between live and
-  paper trading accounts.
+* Running multiple TWS containers within one Kubernetes pod is supported, to
+  allow real time market data to be shared between live and paper trading
+  accounts.
 
 
 ## Usage
@@ -58,7 +58,7 @@ using:
 
 ### Extracting `jts.ini` and `tws.xml`
 
-For each account youn intend to use the image with, login to TWS from a desktop
+For each account you intend to use the image with, login to TWS from a desktop
 computer, or simply start the container and login through it. Repeat for each
 desired account. Now grab `jts.ini` from your installation, which will contain
 a list of encoded account usernames `docker-tws` needs to know where to copy
@@ -125,10 +125,16 @@ All paths are optional.
 <td><code>/home/tws</code>
 <td>Home directory that can be mapped to a shared volume such as a Kubernetes
     <code>emptyDir</code>. On initial startup, the directory is locked and a
-    pristine TWS is copied into it, if it was previously empty. This permits a
-    live account and paper account running as separate containers within one
-    Kubernetes pod to share data, which is necessary for realtime market data
-    license sharing to work.
+    pristine TWS is copied into it, if it was previously empty. See
+    <strong>Simultaneous Live/Paper Containers</strong> for details.
+
+<tr>
+<td><code>/home/tws/Jts</code>
+<td>Per-container application directory that can be mapped to a private volume
+    such as a Kubernetes <code>emptyDir</code>. On initial startup, the
+    directory is populated with a pristine copy of TWS, if it was previously
+    empty. pristine TWS is copied into it, if it was previously empty. See
+    <strong>Simultaneous Live/Paper Containers</strong> for details.
     <p>&nbsp;
     <p>
     Avoid storing this volume persistently, as the TWS program code is copied
@@ -348,7 +354,7 @@ See <a href="https://github.com/IbcAlpha/IBC/blob/master/userguide.md#configurin
     startup, to replace its API port with the specified value. This allows you
     to manage a single <code>tws.xml</code>, with the only conflicting setting
     preventing it running multiple times within a single Kubernetes pod handled
-    for you.
+    automatically.
 
 <tr>
 <td>TZ
