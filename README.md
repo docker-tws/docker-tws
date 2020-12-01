@@ -66,11 +66,11 @@ using:
 <th>Description
 
 <tr>
-<td><code>5900</code>
+<td><code>5900</code> / <code>5901</code>
 <td>VNC display (modify using <code>VNC_DISPLAY</code> option)
 
 <tr>
-<td><code>7462</code>
+<td><code>7462</code> / <code>7463</code>
 <td>IBC telnet server
 
 <tr>
@@ -123,6 +123,61 @@ All paths are optional.
     into it, complicating the task of upgrading TWS version in use.
 
 </table>
+
+
+## Simultaneous Live/Paper Containers
+
+Your live account and the paper account associated with it may be used
+simultaneously, with both receiving real-time market data, so long as both are
+used on the same computer. TWS uses a fingerprinting mechanism to verify this,
+which breaks if the accounts run in different pods, possibly due to changes in
+container IP or MAC addresses.
+
+However, by hosting both instances as containers within the same Kubernetes
+pod, with a shared volume mapped over `/home/tws`, and a per-container private
+`emptyDir` volume mapped over `/home/tws/Jts`, the check succeeds and it
+becomes possible to host this configuration with unattended logins, VNC and
+restarts for both accounts.
+
+The `emptyDir` mapping over `/home/tws/Jts` is necessary since it seems
+impossible to change the location of `/home/tws/Jts/jts.ini`, causing a race at
+startup as the copies of IBC running in each pod update this file to configure
+their associated trading mode.
+
+
+#### Example
+
+An example "combined live/paper" Kubernetes configuration as described below is
+supplied in [example/tws-combined.yml](example/tws-combined.yml).
+
+
+#### Paper Account Setup
+
+Ensure your paper trading account is configured to share real-time market data.
+
+1. From the Interactive Brokers web app, click the burger menu in the top left
+2. Choose "Settings" from near the bottom
+3. Choose "Account Settings" from the sub-menu
+4. Click the gear icon next to "Paper Trading Account" in the right-hand column
+   about one third of the way down
+5. Enable the option to share real-time market data
+6. Wait a few hours for the configuration change to take effect
+
+
+#### Container / Volume / Environment Variable Setup
+
+When `docker-tws` starts, if `/home/tws` or `/home/tws/Jts` are empty, they are
+initialized from a pristine TWS installation stored in the image. The volumes required are:
+
+* `/home/tws`: an `emptyDir` shared volume mounted in both containers. This
+  volume will contain at least a magic `.hwid` file that appears to be part of
+  the fingerprinting process.
+
+* `/home/tws/Jts`: an `emptyDir` volume that is private to each container,
+  needed to avoid a startup race condition.
+
+* `VNC_DISPLAY` should be set to `1` for the paper trading container, so that
+  both VNC servers can share the pod IP address.
 
 
 ## Environment Variables

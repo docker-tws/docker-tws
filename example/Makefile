@@ -1,4 +1,12 @@
-k8s-apply:
+# Deploy combined paper/live pod.
+apply:
+	kubectl apply -f tws-namespace.yml
+	$(MAKE) k8s-conf
+	kubectl apply -f tws-secrets.yml
+	kubectl apply -f tws-combined.yml
+
+# Deploy separate pods for paper / live.
+apply-separate:
 	kubectl apply -f tws-namespace.yml
 	$(MAKE) k8s-conf
 	kubectl apply -f tws-secrets.yml
@@ -6,9 +14,11 @@ k8s-apply:
 	kubectl apply -f tws-live.yml
 
 k8s-delete:
-	kubectl delete -f tws-paper.yml
-	kubectl delete -f tws-secrets.yml
-	kubectl delete -f tws-namespace.yml
+	kubectl delete --ignore-not-found=true -f tws-combined.yml
+	kubectl delete --ignore-not-found=true -f tws-paper.yml
+	kubectl delete --ignore-not-found=true -f tws-live.yml
+	kubectl delete --ignore-not-found=true -f tws-secrets.yml
+	kubectl delete --ignore-not-found=true -f tws-namespace.yml
 
 # Expects jts.ini and tws.xml to be stored in conf/live/
 k8s-conf:

@@ -353,10 +353,19 @@ def copy_template_if_empty():
     try:
         fcntl.flock(fd, fcntl.LOCK_EX)
         try:
-            if len(glob.glob('/home/tws/*')) == 0:
+            if len(glob.glob('/home/tws/Jts/*')) == 0:
+                print('Copying homedir..')
                 subprocess.check_call(
-                    'tar -C /home/tws.pristine -c . | '
+                    'tar -C /home/tws.pristine --exclude=Jts/\\* -c . | '
                     'tar -C /home/tws -x',
+                    shell=True,
+                )
+
+            if len(glob.glob('/home/tws/Jts/*')) == 0:
+                print('Copying Jts dir..')
+                subprocess.check_call(
+                    'tar -C /home/tws.pristine/Jts -c . | '
+                    'tar -C /home/tws/Jts -x',
                     shell=True,
                 )
         finally:
