@@ -12,6 +12,7 @@ import signal
 import subprocess
 import sys
 import time
+import xml.dom.minidom
 
 
 VNC_DISPLAY = os.environ.get('VNC_DISPLAY', '0')
@@ -57,6 +58,27 @@ def set_vnc_password():
     print('VNC password is:', os.environ['VNC_PASSWORD'])
 
 
+def rewrite_tws_xml(xml_s):
+    print('Rewriting tws.xml to change API port..')
+    doc = xml.dom.minidom.parseString(xml_s)
+
+    settings = doc.childNodes[0]
+    assert settings.tagName.lower() == 'settings'
+
+    for elem in settings.childNodes:
+        if (
+            elem.nodeType == xml.dom.minidom.Node.ELEMENT_NODE and
+            elem.tagName.lower() == 'apisettings'
+        ):
+            api = elem
+            break
+    else:
+        assert 0, 'Could not find <ApiSettings> element'
+
+    api.setAttribute("port", os.environ['TWS_API_PORT'])
+    return doc.toxml(encoding='utf-8')
+
+
 def copy_initial_data():
     if os.path.exists('/conf/jts.ini'):
         shutil.copy('/conf/jts.ini',
@@ -70,6 +92,9 @@ def copy_initial_data():
             xml = fp.read()
     else:
         return
+
+    if os.environ.get('TWS_API_PORT'):
+        xml = rewrite_tws_xml(xml)
 
     for name in get_profile_dirs():
         profile_dir = os.path.join('~/Jts', name)

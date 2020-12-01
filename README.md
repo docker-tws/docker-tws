@@ -56,6 +56,18 @@ using:
     -v /path/to/tws.xml:/conf/tws.xml:ro
 ```
 
+### Extracting `jts.ini` and `tws.xml`
+
+For each account youn intend to use the image with, login to TWS from a desktop
+computer, or simply start the container and login through it. Repeat for each
+desired account. Now grab `jts.ini` from your installation, which will contain
+a list of encoded account usernames `docker-tws` needs to know where to copy
+`tws.xml` to.
+
+Simply grab `tws.xml` after you have finished customizing it. If you created
+the files inside a Docker image, use something like `docker cp` to extract
+them.
+
 
 ## Exposed Ports
 
@@ -79,7 +91,7 @@ using:
 
 <tr>
 <td><code>7497</code>
-<td>TWS API paper trading account
+<td>TWS API paper trading account (modify using <code>TWS_API_PORT</code>)
 
 </table>
 
@@ -178,6 +190,9 @@ initialized from a pristine TWS installation stored in the image. The volumes re
 
 * `VNC_DISPLAY` should be set to `1` for the paper trading container, so that
   both VNC servers can share the pod IP address.
+
+* `TWS_API_PORT` should be set to `7497` for the paper trading container, so
+  that both API servers can share the pod IP address.
 
 
 ## Environment Variables
@@ -325,6 +340,15 @@ See <a href="https://github.com/IbcAlpha/IBC/blob/master/userguide.md#configurin
 <td>IBC_LOG_COMPONENTS
 <td>never
 <td>
+
+<tr>
+<td>TWS_API_PORT
+<td>
+<td>If set, the provided <code>tws.xml</code> is rewritten during container
+    startup, to replace its API port with the specified value. This allows you
+    to manage a single <code>tws.xml</code>, with the only conflicting setting
+    preventing it running multiple times within a single Kubernetes pod handled
+    for you.
 
 <tr>
 <td>TZ

@@ -26,6 +26,7 @@ data:
   IBC_STORE_SETTINGS_ON_SERVER: "no"
   IBC_READONLY_LOGIN: "yes"
   VNC_DISPLAY: "1"
+  TWS_API_PORT: "7497"
   TZ: "Europe/London"
 
 ---
