@@ -34,12 +34,17 @@ spec:
         - name: conf
           secret:
             secretName: ibkr-conf
+        - name: shm
+          emptyDir:
+            medium: Memory
       containers:
         - name: tws
           image: registry.mycorp.mydomain/tws
           volumeMounts:
           - mountPath: /conf
             name: conf
+          - mountPath: /dev/shm
+            name: shm
 
           envFrom:
           - secretRef:

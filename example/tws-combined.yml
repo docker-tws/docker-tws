@@ -58,6 +58,12 @@ spec:
           emptyDir:
         - name: jts-paper
           emptyDir:
+        - name: shm-live
+          emptyDir:
+            medium: Memory
+        - name: shm-paper
+          emptyDir:
+            medium: Memory
       containers:
         - name: live
           image: registry.mycorp.mydomain/tws
@@ -68,6 +74,8 @@ spec:
             name: jts-live
           - mountPath: /conf
             name: conf
+          - mountPath: /dev/shm
+            name: shm-live
 
           envFrom:
           - secretRef:
@@ -91,6 +99,8 @@ spec:
             name: jts-paper
           - mountPath: /conf
             name: conf
+          - mountPath: /dev/shm
+            name: shm-paper
 
           envFrom:
           - secretRef:
