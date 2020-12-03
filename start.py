@@ -101,8 +101,9 @@ def copy_initial_data():
         os.makedirs(os.path.expanduser(profile_dir), exist_ok=True)
 
         path = os.path.expanduser(os.path.join(profile_dir, 'tws.xml'))
-        with open(path, 'wb') as fp:
-            fp.write(xml)
+        if not os.path.exists(path):
+            with open(path, 'wb') as fp:
+                fp.write(xml)
 
 
 def write_ibc_config():
