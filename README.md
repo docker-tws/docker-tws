@@ -116,7 +116,7 @@ All paths are optional.
 <td>File to install as <code>~tws/Jts/jts.ini</code>
 
 <tr>
-<td><code>/conf/tws.xml</code> or <code>tws.xml.gz</code> or <code>tws.xml.zstd</code>
+<td><code>/conf/tws.xml</code> or <code>tws.xml.gz</code> or <code>tws.xml.zst</code>
 <td>File to install as <code>~tws/Jts/[profile]/tws.xml</code>. If provided,
     <code>jts.ini</code> must also be provided, as it is needed to detect the
     profile name.<br>
