@@ -119,8 +119,8 @@ All paths are optional.
 <td><code>/conf/tws.xml</code> or <code>tws.xml.gz</code> or <code>tws.xml.zstd</code>
 <td>File to install as <code>~tws/Jts/[profile]/tws.xml</code>. If provided,
     <code>jts.ini</code> must also be provided, as it is needed to detect the
-    profile name.
-    <p>
+    profile name.<br>
+    <br>
     To fit the XML in a Kubernetes secret it is likely necessary to compress
     it. The image supports <code>zstd</code> specifically for this task, which
     outperforms gzip by a factor of 2, which in some cases may be required.
