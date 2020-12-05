@@ -29,6 +29,7 @@ RUN \
         libavformat57 \
         libnspr4 \
         libnss3 \
+        zstd \
         \
         && \
     apt-get clean && \

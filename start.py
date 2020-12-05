@@ -90,6 +90,9 @@ def copy_initial_data():
     elif os.path.exists('/conf/tws.xml.gz'):
         with gzip.open('/conf/tws.xml.gz', 'rb') as fp:
             xml = fp.read()
+    elif os.path.exists('/conf/tws.xml.zst'):
+        xml = subprocess.check_output(['zstd', '-cd', '/conf/tws.xml.zst'],
+                                      encoding=None)
     else:
         return
 
