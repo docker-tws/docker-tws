@@ -2,6 +2,7 @@
 
 import binascii
 import configparser
+import datetime
 import fcntl
 import glob
 import gzip
@@ -65,17 +66,35 @@ def rewrite_tws_xml(xml_s):
     settings = doc.childNodes[0]
     assert settings.tagName.lower() == 'settings'
 
+    apisettings = None
+    systemsettings = None
+
     for elem in settings.childNodes:
-        if (
-            elem.nodeType == xml.dom.minidom.Node.ELEMENT_NODE and
-            elem.tagName.lower() == 'apisettings'
-        ):
-            api = elem
-            break
-    else:
+        if elem.nodeType == xml.dom.minidom.Node.ELEMENT_NODE:
+            if elem.tagName.lower() == 'apisettings':
+                apisettings = elem
+            if elem.tagName.lower() == 'systemsettings':
+                systemsettings = elem
+
+    if apisettings is None:
         assert 0, 'Could not find <ApiSettings> element'
 
-    api.setAttribute("port", os.environ['TWS_API_PORT'])
+    if apisettings is None:
+        assert 0, 'Could not find <SystemSettings> element'
+
+    if os.environ.get('TWS_API_PORT'):
+        apisettings.setAttribute("port", os.environ['TWS_API_PORT'])
+
+    if os.environ.get('TWS_LOGOFF_TIME'):
+        systemsettings.setAttribute(
+            "autoLogoffTime",
+            # Convert 23:59 to "11:59,PM"
+            datetime.datetime.strptime(
+                os.environ['TWS_LOGOFF_TIME'],
+                '%H:%M',
+            ).strftime('%I:%M,%p'),
+        )
+
     return doc.toxml(encoding='utf-8')
 
 
@@ -96,7 +115,7 @@ def copy_initial_data():
     else:
         return
 
-    if os.environ.get('TWS_API_PORT'):
+    if os.environ.get('TWS_API_PORT') or os.environ.get('TWS_LOGOFF_TIME'):
         xml = rewrite_tws_xml(xml)
 
     for name in get_profile_dirs():

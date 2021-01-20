@@ -357,8 +357,21 @@ See <a href="https://github.com/IbcAlpha/IBC/blob/master/userguide.md#configurin
 <td>
 <td>If set, the provided <code>tws.xml</code> is rewritten during container
     startup, to replace its API port with the specified value. This allows you
-    to manage a single <code>tws.xml</code>, with the only conflicting setting
+    to manage a single <code>tws.xml</code>, with the conflicting setting
     preventing it running multiple times within a single Kubernetes pod handled
+    automatically.
+
+<tr>
+<td>TWS_LOGOFF_TIME
+<td>
+<td>If set, the provided <code>tws.xml</code> is rewritten during container
+    startup, to replace its auto-logoff time with the specified value. This
+    may help avoid a race during startup where both paper and live TWS
+    instances attempt to write their authentication tokens to the same file on
+    disk, causing one or the other instance to attempt to log in using the
+    incorrect mode, or reusing an expired token. This allows your to manage a
+    single <code>tws.xml</code>, with the conflicting setting preventing it
+    running multiple times within a single Kubernetes pod handled
     automatically.
 
 <tr>
