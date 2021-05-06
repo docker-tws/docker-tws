@@ -375,6 +375,11 @@ See <a href="https://github.com/IbcAlpha/IBC/blob/master/userguide.md#configurin
     automatically.
 
 <tr>
+<td>JDWP_PORT
+<td>
+<td>Enable JDWP on port.
+
+<tr>
 <td>TZ
 <td>America/New_York
 <td>Container <a

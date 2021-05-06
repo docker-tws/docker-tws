@@ -292,6 +292,7 @@ def start_vnc_server():
 def update_jvm_options():
     path = '/home/tws/Jts/current/tws.vmoptions'
     agent_line = -1
+    agentlib_line = -1
 
     with open(path, 'r+') as fp:
         lines = fp.readlines()
@@ -300,6 +301,8 @@ def update_jvm_options():
                 lines[i] = '-Xmx%s\n' % (os.environ.get('JVM_HEAP_SIZE', '4096m'),)
             if line.startswith('-javaagent'):
                 agent_line = i
+            if line.startswith('-agentlib'):
+                agentlib_line = i
 
         if agent_line == -1:
             lines.append(None)
@@ -308,6 +311,18 @@ def update_jvm_options():
             '/opt/ibc/IBC.jar',
             os.path.expanduser('~/ibc/config.ini'),
         )
+
+        if 'JDWP_PORT' in os.environ:
+            if agentlib_line == -1:
+                lines.append(None)
+
+            lines[agentlib_line] = (
+                '-agentlib:'
+                    'jdwp=transport=dt_socket,'
+                    'server=y,'
+                    'suspend=n,'
+                    'address=' + os.environ['JDWP_PORT'] + '\n'
+            )
 
         fp.seek(0)
         fp.truncate(0)
