@@ -423,7 +423,7 @@ See <a href="https://github.com/IbcAlpha/IBC/blob/master/userguide.md#configurin
 
 ## Base System
 
-Ubuntu 20.04
+Ubuntu 18.04
 
 <table>
 

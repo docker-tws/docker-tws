@@ -17,6 +17,9 @@ RUN \
         \
         python3 \
         libappindicator3-1 \
+        libcurl3-gnutls \
+        libcurl3-nss \
+        libcurl3 \
         libgbm1 \
         libxss1 \
         libxslt1.1 \
